@@ -47,10 +47,9 @@ def get_device(args):
     """
     Determine the device to use for the given arguments.
     """
-    if args.gpu_id >= 0:
-        return torch.device('cuda:{}'.format(args.gpu_id))
-    else:
-        return torch.device('cpu')
+
+    return 'cuda:0'
+
     
 
 def get_data_loader(args, train):
