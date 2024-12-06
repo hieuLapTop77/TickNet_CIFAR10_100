@@ -195,8 +195,10 @@ def main():
         
         # define loss function and optimizer
         criterion = torch.nn.CrossEntropyLoss().to(device)
-        optimizer = torch.optim.SGD(params=model.parameters(), lr=args.learning_rate, momentum=args.momentum, weight_decay=args.weight_decay)
-        scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer=optimizer, milestones=args.schedule, gamma=0.1)
+        # optimizer = torch.optim.SCD(params=model.parameters(), lr=args.learning_rate, momentum=args.momentum, weight_decay=args.weight_decay)
+        optimizer = torch.optim.Adam(params=model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
+        # scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer=optimizer, milestones=args.schedule, gamma=0.1)
+        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.1, patience=10, verbose=True)
         
         # get train and val data loaders
         train_loader = get_data_loader(args=args, train=True)
@@ -220,7 +222,8 @@ def main():
                 torch.save({"model_state_dict": model.state_dict()}, pathout + '/' + 'checkpoint_epoch{:>04d}_{:.2f}.pth'.format(n_epoch + 1,100.0 * acc_val_max))
         
             # adjust learning rate
-            scheduler.step()
+            # scheduler.step()
+            scheduler.step(acc_val)
         
             # save the model weights
             #torch.save({"model_state_dict": model.state_dict()}, 'checkpoint_epoch{:>04d}.pth'.format(n_epoch + 1))
