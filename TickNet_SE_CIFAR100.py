@@ -202,7 +202,7 @@ def main():
         import torch.optim as optimimport torch_optimizer
         optimizer = torch_optimizer.Lion(params=model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
 
-       scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
             optimizer, 
             mode='max',      
             factor=0.1,      
