@@ -199,17 +199,16 @@ def main():
         # optimizer = torch.optim.Adam(params=model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
         # scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer=optimizer, milestones=args.schedule, gamma=0.1)
         # scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.1, patience=10, verbose=True)
-        import torch.optim as optim
+        import torch.optim as optimimport torch_optimizer
+        optimizer = torch_optimizer.Lion(params=model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
 
-        # Tạo optimizer Lion
-        optimizer = optim.Lion(params=model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
-        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-                optimizer, 
-                mode='max',      
-                factor=0.1,      
-                patience=10,     
-                verbose=True     
-            )
+       scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+            optimizer, 
+            mode='max',      
+            factor=0.1,      
+            patience=10,     
+            verbose=True     
+        )
         
         # get train and val data loaders
         train_loader = get_data_loader(args=args, train=True)
