@@ -195,20 +195,9 @@ def main():
         
         # define loss function and optimizer
         criterion = torch.nn.CrossEntropyLoss().to(device)
-        # optimizer = torch.optim.SCD(params=model.parameters(), lr=args.learning_rate, momentum=args.momentum, weight_decay=args.weight_decay)
-        # optimizer = torch.optim.Adam(params=model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
-        # scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer=optimizer, milestones=args.schedule, gamma=0.1)
-        # scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', factor=0.1, patience=10, verbose=True)
-        import torch.optim as optimimport torch_optimizer
-        optimizer = torch_optimizer.Lion(params=model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
+        optimizer = torch.optim.AdamW(params=model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
+        scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer=optimizer, milestones=args.schedule, gamma=0.1)
 
-        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-            optimizer, 
-            mode='max',      
-            factor=0.1,      
-            patience=10,     
-            verbose=True     
-        )
         
         # get train and val data loaders
         train_loader = get_data_loader(args=args, train=True)
