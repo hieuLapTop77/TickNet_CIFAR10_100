@@ -220,8 +220,8 @@ def main():
                 torch.save({"model_state_dict": model.state_dict()}, pathout + '/' + 'checkpoint_epoch{:>04d}_{:.2f}.pth'.format(n_epoch + 1,100.0 * acc_val_max))
         
             # adjust learning rate
-            # scheduler.step()
-            scheduler.step(acc_val)
+            scheduler.step()
+            # scheduler.step(acc_val)
         
             # save the model weights
             #torch.save({"model_state_dict": model.state_dict()}, 'checkpoint_epoch{:>04d}.pth'.format(n_epoch + 1))
