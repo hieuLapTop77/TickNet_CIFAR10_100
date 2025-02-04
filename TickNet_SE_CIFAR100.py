@@ -47,10 +47,11 @@ def get_device(args):
     """
     Determine the device to use for the given arguments.
     """
-    if args.gpu_id >= 0:
-        return torch.device('cuda:{}'.format(args.gpu_id))
-    else:
-        return torch.device('cpu')
+    return 'cuda:0'
+    # if args.gpu_id >= 0:
+    #     return torch.device('cuda:{}'.format(args.gpu_id))
+    # else:
+    #     return torch.device('cpu')
     
 
 def get_data_loader(args, train):
@@ -175,8 +176,8 @@ def main():
     
     #arr_typesize = ['small','large', 'medium']
     #arr_typesize = ['large_large_new']
-    arr_typesize = ['large_new7','small7'] 
-    #arr_typesize = ['small']# large, medium, small
+    # arr_typesize = ['large_new7','small7'] 
+    #arr_typesize = ['small7']# large, medium, small
     #Corresponding to (large: #2TickBlock01_deeper, medium: #2TickBlock01, small:#2TickBlock00(new_moi them vao luc code tach roi mang TickNet))
     for typesize in arr_typesize:   
         strmode = 'CIFAR100_TickNet_' + typesize + '_SE'  
