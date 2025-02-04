@@ -169,11 +169,8 @@ def main():
     # print model with parameter and FLOPs counts    
     torch.autograd.set_detect_anomaly(True)     
     
-    #arr_typesize = ['large','medium','small']
-    #arr_typesize = ['large_large_new']
-    #arr_typesize = ['large_new','small']
-    arr_typesize = ['small7','large_new7']
-    
+    # arr_typesize = ['small7','large_new7']
+    arr_typesize = ['small7']
     #arr_typesize = ['small']# large, medium, small
     #Corresponding to (large: #2TickBlock01_deeper, medium: #2TickBlock01, small:#2TickBlock00(new_moi them vao luc code tach roi mang TickNet))
     for typesize in arr_typesize:   
@@ -194,11 +191,11 @@ def main():
         
         # define loss function and optimizer
         criterion = torch.nn.CrossEntropyLoss().to(device)
-        # optimizer = torch.optim.SGD(params=model.parameters(), lr=args.learning_rate, momentum=args.momentum, weight_decay=args.weight_decay)
-        # scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer=optimizer, milestones=args.schedule, gamma=0.1)
-        # adam
-        optimizer = torch.optim.AdamW(params=model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
+        optimizer = torch.optim.SGD(params=model.parameters(), lr=args.learning_rate, momentum=args.momentum, weight_decay=args.weight_decay)
         scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer=optimizer, milestones=args.schedule, gamma=0.1)
+        # adam
+        # optimizer = torch.optim.AdamW(params=model.parameters(), lr=args.learning_rate, weight_decay=args.weight_decay)
+        # scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer=optimizer, milestones=args.schedule, gamma=0.1)
 
        
         # get train and val data loaders
