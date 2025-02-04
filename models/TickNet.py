@@ -14,8 +14,10 @@ class FR_PDP_block(torch.nn.Module):
     def __init__(self,
                  in_channels,
                  out_channels,
-                 stride):
+                 stride,
+                 use_bottleneck=False):
         super().__init__()
+        self.use_bottleneck = use_bottleneck
         self.Pw1 = conv1x1_block(in_channels=in_channels,
                                 out_channels=in_channels,                                
                                 use_bn=False,
@@ -31,6 +33,11 @@ class FR_PDP_block(torch.nn.Module):
         self.in_channels = in_channels
         self.out_channels = out_channels
         self.SE = SE(out_channels, 16)
+        if use_bottleneck:
+            # bottleneck_channels = 64  
+            self.bottleneck = Bottleneck(in_channels=512, 
+                                        bottleneck_channels=64,  
+                                        out_channels=128) 
     def forward(self, x):
         residual = x
         x = self.Pw1(x)        
@@ -42,11 +49,28 @@ class FR_PDP_block(torch.nn.Module):
             #print('vao2: ' + str(x.size()))
             x = x + residual
         else:
-            #print('vao2: ' + str(x.size()))
-            residual = self.PwR(residual)
+            if self.use_bottleneck and self.in_channels > self.out_channels:
+                residual = self.bottleneck(residual)
+            else:
+                residual = self.PwR(residual)
             x = x + residual
         return x
+        
+class Bottleneck(nn.Module):
+    def __init__(self, in_channels, bottleneck_channels, out_channels):
+        super().__init__()
+        self.conv1 = nn.Conv2d(in_channels, bottleneck_channels, kernel_size=1)
+        self.bn1 = nn.BatchNorm2d(bottleneck_channels)
+        self.relu = nn.ReLU(inplace=True)
+        self.conv2 = nn.Conv2d(bottleneck_channels, out_channels, kernel_size=1)
+        self.bn2 = nn.BatchNorm2d(out_channels)
 
+    def forward(self, x):
+        out = self.bn1(self.conv1(x))
+        out = self.relu(out)
+        out = self.bn2(self.conv2(out))
+        return out
+        
 class TickNet(torch.nn.Module):
     """
     Class for constructing TickNet.
@@ -80,7 +104,7 @@ class TickNet(torch.nn.Module):
             stage = torch.nn.Sequential()
             for unit_id, unit_channels in enumerate(stage_channels):
                 stride = strides[stage_id] if unit_id == 0 else 1                
-                stage.add_module("unit{}".format(unit_id + 1), FR_PDP_block(in_channels=in_channels, out_channels=unit_channels, stride=stride))
+                stage.add_module("unit{}".format(unit_id + 1), FR_PDP_block(in_channels=in_channels, out_channels=unit_channels, stride=stride, use_bottleneck=use_bottleneck))
                 in_channels = unit_channels
             self.backbone.add_module("stage{}".format(stage_id + 1), stage)
         self.final_conv_channels = 1024        
