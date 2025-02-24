@@ -177,7 +177,7 @@ def main():
     #arr_typesize = ['small','large', 'medium']
     #arr_typesize = ['large_large_new']
     # arr_typesize = ['large_new7','small7'] 
-    arr_typesize = ['large_new7']
+    arr_typesize = ['small7']
     #Corresponding to (large: #2TickBlock01_deeper, medium: #2TickBlock01, small:#2TickBlock00(new_moi them vao luc code tach roi mang TickNet))
     for typesize in arr_typesize:   
         strmode = 'CIFAR100_TickNet_' + typesize + '_SE'  
