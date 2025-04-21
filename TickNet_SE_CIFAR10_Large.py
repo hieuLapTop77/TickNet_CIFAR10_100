@@ -167,7 +167,7 @@ def main():
     torch.autograd.set_detect_anomaly(True)     
     
     # arr_typesize = ['small7','large_new7']
-    arr_typesize = ['small7']
+    arr_typesize = ['large_new7']
     #arr_typesize = ['small']# large, medium, small
     #Corresponding to (large: #2TickBlock01_deeper, medium: #2TickBlock01, small:#2TickBlock00(new_moi them vao luc code tach roi mang TickNet))
     for typesize in arr_typesize:   
